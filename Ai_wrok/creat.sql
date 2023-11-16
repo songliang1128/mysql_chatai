@@ -13,6 +13,7 @@ create table chatContent
      id bigint
      primary key
      auto_increment,
+     role varchar(255),
      userId bigint,
      uuid bigint,
      time datetime,

@@ -16,10 +16,11 @@
 import {onMounted, ref} from 'vue';
 import { Delete, Edit, Plus } from '@element-plus/icons-vue';
 import DialogHistory from "./DialogHistory.vue";
-import {getChatCard} from "../../api/chat";
+import {addDialog, getChatCard} from "../../api/chat";
 
-const emits = defineEmits(['someValues']);
-
+const emits = defineEmits(['someValues', 'delete']);
+let uuid
+const digLists = ref([]);
 function sentValue(value){
     emits('someValues', value);
 }
@@ -34,14 +35,31 @@ onMounted(() => {
         })
 })
 
-
-let uuid = 2;
-const digLists = ref([]);
+function getUuid(){
+  if(digLists.value.length === 0) uuid = 1;
+  else  uuid = digLists.value[digLists.value.length - 1].uuid + 1;
+}
 
 function createDia() {
+
+  getUuid();
+
+  const newDialog = {
+    uuid: uuid,
+    title: '新建会话'
+  }
+
+  addDialog(newDialog)
+      .then((response) =>{
+        console.log(response)
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+
   digLists.value.push({
     title: '新建会话',
-    uuid: ++uuid,
+    uuid:   uuid,
   });
   console.log(digLists.value);
 }

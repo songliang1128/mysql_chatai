@@ -1,4 +1,4 @@
-package com.ai.ai_work.entity.dto.chat;
+package com.ai.ai_work.entity.vo.chat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DialogDto {
+public class DialogVo {
 
     private Long uuid;
 

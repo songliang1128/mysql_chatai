@@ -15,3 +15,26 @@ export function getChatCard(){
     })
 }
 
+export function addDialog(data){
+    return request({
+        url: '/api/user/chat',
+        method: 'post',
+        data,
+    })
+}
+
+export function deleteDialog(uuid){
+    return request({
+        url: '/api/user/chat/delete/' + uuid,
+        method: 'get',
+    })
+}
+
+export function updateDialog(data){
+    return request({
+        url: '/api/user/chat/change',
+        method: 'post',
+        data,
+    })
+}
+
