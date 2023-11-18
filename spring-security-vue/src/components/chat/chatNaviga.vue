@@ -50,9 +50,6 @@ function createDia() {
   }
 
   addDialog(newDialog)
-      .then((response) =>{
-        console.log(response)
-      })
       .catch((err) => {
         console.log(err);
       })
@@ -61,7 +58,6 @@ function createDia() {
     title: '新建会话',
     uuid:   uuid,
   });
-  console.log(digLists.value);
 }
 </script>
 

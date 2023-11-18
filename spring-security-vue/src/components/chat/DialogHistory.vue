@@ -77,7 +77,7 @@ function updateDia(values){
   border-radius: 10px;
   margin-top: 10px;
   display: flex;
-  width: 98%;
+  width: 250px;
 }
 
 span {

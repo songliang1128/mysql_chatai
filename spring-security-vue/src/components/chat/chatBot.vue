@@ -1,38 +1,56 @@
 <script setup>
 
-import {computed, nextTick, ref} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import {getNowDayTime} from "../../api/api";
 import store from "../../store";
+import {getBotInfo, getChatInfo} from "../../api/chat";
+
 const props = defineProps(['id'])
 const scrollbarRef = ref();
 const textarea = ref('');
-
-const Submit = () =>{
-  dialogList.value.push(
-      {
-        role: 'user',
-        time: getNowDayTime(),
-        content: textarea.value
-      })
-}
-
-const dialogList = ref([
-  {
-    role: 'assistant',
-    time: '2023-11-15 17:34:21',
-    content: '你好'
-  },
-  {
-    role: 'user',
-    time: '2023-11-15 17:34:21',
-    content: '你好呀'
-  }
-]);
-
-
 const id = computed(() => {
   return props.id;
 })
+
+const Submit = () =>{
+
+  dialogList.value.push({
+    role: 'user',
+    time: getNowDayTime(),
+    content: textarea.value
+  })
+
+   getChatInfo(textarea.value, id.value)
+       .then(() => {
+
+         getBotInfo(id.value)
+             .then((response) => {
+               dialogList.value = response.data.data;
+               DownScrollBar();
+             })
+             .catch(() => {
+               dialogList.value.push({
+                 role: 'assistant',
+                 time: getNowDayTime(),
+                 content: "数据请求失败, 请检查网络设置"
+               })
+             })
+       })
+  DownScrollBar();
+  textarea.value = '';
+}
+
+const dialogList = ref([
+
+]);
+
+watch(id, (newId)=>{
+  getBotInfo(newId)
+      .then((response) => {
+        dialogList.value = response.data.data;
+        DownScrollBar();
+      })
+},{immediate: true});
 
 const DownScrollBar = () => {
   nextTick(() => {

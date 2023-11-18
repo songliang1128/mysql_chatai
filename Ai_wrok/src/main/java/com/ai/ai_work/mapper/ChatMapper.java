@@ -17,4 +17,8 @@ public interface ChatMapper extends BaseMapper<ChatContent> {
     void delete(Long uuid, Long userId);
 
     void updateDialog(Long userId, Long uuid, String title);
+
+    void deleteContent(Long uuid, Long userId);
+
+    void addContent(ChatContent chatContent);
 }

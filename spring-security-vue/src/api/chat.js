@@ -1,10 +1,13 @@
 import request from './request'
 
-export function getChatInfo(params){
+export function getChatInfo(question, id){
     return request({
         url: '/api/user/sendQuestion',
         method: 'get',
-        params,
+        params:{
+            question: question,
+            uuid: id,
+        }
     })
 }
 
@@ -35,6 +38,16 @@ export function updateDialog(data){
         url: '/api/user/chat/change',
         method: 'post',
         data,
+    })
+}
+
+export function getBotInfo(uuid){
+    return request({
+        url: '/api/user/chat/getBotInfo',
+        method: 'get',
+        params: {
+            uuid: uuid,
+        }
     })
 }
 

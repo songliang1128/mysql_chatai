@@ -2,16 +2,20 @@ package com.ai.ai_work.service.Impl;
 
 import com.ai.ai_work.entity.pojo.ChatContent;
 import com.ai.ai_work.entity.vo.chat.DialogVo;
+import com.ai.ai_work.enums.Role;
 import com.ai.ai_work.mapper.ChatMapper;
 import com.ai.ai_work.service.ChatService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ChatServiceImpl extends ServiceImpl<ChatMapper, ChatContent> implements ChatService {
 
     @Autowired
@@ -30,6 +34,7 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, ChatContent> implem
     @Override
     public void deleteDialog(Long uuid, Long userId) {
         chatMapper.delete(uuid, userId);
+        chatMapper.deleteContent(uuid, userId);
     }
 
     @Override
@@ -38,10 +43,35 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, ChatContent> implem
     }
 
     @Override
-    public List<ChatContent> getBotInfo(String username, Long uuid) {
+    public List<ChatContent> getBotInfo(Long userId, Long uuid) {
+
         QueryWrapper<ChatContent> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username).eq("uuid", uuid);
+        queryWrapper.eq("user_id", userId).eq("uuid", uuid);
+
         return this.list(queryWrapper);
+    }
+
+    @Override
+    public void addContent(String question, Role role, Long uuid, Long userId) {
+        ChatContent chatContent = null;
+        if(role == Role.USER) {
+            chatContent = ChatContent.builder()
+                    .content(question)
+                    .role("user")
+                    .userId(userId)
+                    .uuid(uuid)
+                    .time(LocalDateTime.now())
+                    .build();
+        } else if(role == Role.ASSISTANT){
+            chatContent = ChatContent.builder()
+                    .content(question)
+                    .role("assistant")
+                    .userId(userId)
+                    .uuid(uuid)
+                    .time(LocalDateTime.now())
+                    .build();
+        }
+        chatMapper.addContent(chatContent);
     }
 
 

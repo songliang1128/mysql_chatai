@@ -3,9 +3,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ai.ai_work.mapper.ChatMapper">
     <insert id="addDialog">
-        insert into uuid (userId, uuid, title)
+        insert into uuid (user_id, uuid, title)
         values (#{userId}, #{uuid}, #{title})
     </insert>
+
+    <insert id="addContent">
+        insert into chat_content (user_id, uuid, time, content, role)
+        values (#{userId}, #{uuid}, #{time}, #{content}, #{role})
+    </insert>
+
     <update id="updateDialog">
         update uuid
         <set>
@@ -14,12 +20,15 @@
         where userId = #{userId} and uuid = #{uuid};
     </update>
     <delete id="delete">
-        delete from uuid where uuid = #{uuid} and userId = #{userId};
+        delete from uuid where uuid = #{uuid} and user_id = #{userId};
+    </delete>
+    <delete id="deleteContent">
+        delete from chat_content where uuid = #{uuid} and user_id = #{userId};
     </delete>
 
 
     <select id="getInfo" resultType="com.ai.ai_work.entity.vo.chat.DialogVo">
-        select uuid, title from uuid where userId = #{userId}
+        select uuid, title from uuid where user_id = #{userId}
         group by uuid
         order by uuid
 

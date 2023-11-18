@@ -7,6 +7,8 @@ import com.ai.ai_work.config.XfXhStreamClient;
 import com.ai.ai_work.entity.SecurityUser;
 import com.ai.ai_work.entity.dto.MsgDTO;
 import com.ai.ai_work.entity.pojo.User;
+import com.ai.ai_work.enums.Role;
+import com.ai.ai_work.service.ChatService;
 import com.ai.ai_work.utils.JwtUtil;
 import com.ai.ai_work.utils.XfXhWebSocketListener;
 import com.ai.ai_work.utils.resonse.Result;
@@ -32,6 +34,9 @@ public class UserController {
     @Resource
     private XfXhStreamClient xfXhStreamClient;
 
+    @Autowired
+    private ChatService chatService;
+
     @Resource
     private XfXhConfig xfXhConfig;
 
@@ -42,9 +47,24 @@ public class UserController {
         this.authenticationManager = authenticationManager;
     }
 
+    public Long getUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+
+        User user = securityUser.getUser();
+
+        return user.getId();
+    }
+
     @GetMapping("/sendQuestion")
-    public String sendQuestion(@RequestParam("question") String question) {
+    public String sendQuestion(@RequestParam Map<String, String> map) {
         // 如果是无效字符串，则不对大模型进行请求
+
+        String question = map.get("question");
+
+        Long uuid = Long.valueOf(map.get("uuid"));
+
         if (StrUtil.isBlank(question)) {
             return "无效问题，请重新输入";
         }
@@ -78,6 +98,13 @@ public class UserController {
             if (count > maxCount) {
                 return "大模型响应超时，请联系管理员";
             }
+
+            Long userId = getUserId();
+
+            chatService.addContent(question, Role.USER, uuid, userId);
+
+            chatService.addContent(listener.getAnswer().toString(), Role.ASSISTANT, uuid, userId);
+
             // 响应大模型的答案
             return listener.getAnswer().toString();
         } catch (InterruptedException e) {
