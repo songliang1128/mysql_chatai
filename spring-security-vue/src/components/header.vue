@@ -38,7 +38,7 @@ onMounted(() =>{
       </template>
     </el-menu-item>
     <div v-for="(menu,index) in menus">
-      <el-menu-item :index="'/'.concat('main', '/', menu.path)" v-if="index > 0 && index < 4">
+      <el-menu-item :index="'/'.concat('main', '/', menu.path)" v-if="index > 0 && index < 5">
         <template #title>
           <el-icon>
             <component :is="menu.meta.icon"/>
@@ -51,6 +51,8 @@ onMounted(() =>{
         </template>
       </el-menu-item>
     </div>
+
+    <el-menu-item index="/main/infoIndex">消息</el-menu-item>
 
     <el-sub-menu index="4" style="margin-left: auto;">
     <template #title>{{ username }}</template>

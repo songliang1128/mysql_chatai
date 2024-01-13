@@ -42,6 +42,16 @@ const routes = [
                 component: () => import('../components/money/moneyIndex.vue')
             },
             {
+                 path: 'feedback',
+                meta: {title: '反馈', icon: 'Money'},
+                 component: () => import('../components/feedback/feedbackIndex.vue')
+            },
+            {
+                path: 'infoIndex',
+                meta: {title: '消息', icon: 'Money'},
+                component: () => import('../components/information/infoIndex.vue')
+            },
+            {
                 path: 'info',
                 component: () => import('../view/info.vue')
             },
